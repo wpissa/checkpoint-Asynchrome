@@ -1,0 +1,195 @@
+// Tache 01
+async function itereWithAsyncAwait(array) {
+    for (const value of array) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Attendre 1 seconde
+        console.log(value); // Afficher la valeur
+    }
+}
+// Utilisation de la fonction itereWithAsyncAwait
+const values = [1, 2, 3, 4, 5];
+itereWithAsyncAwait(values);
+
+// Tache 02Fonction simulateur d'appel API
+function callAPI() {
+    return new Promise((resolve, reject) => {
+        // Simuler un délai d'attente aléatoire pour l'appel API
+        setTimeout(() => {
+            // Données de réponse simulées
+            const responseData = { /* Vos données de réponse */ };
+            // Résoudre la promesse avec les données de réponse
+            resolve(responseData);
+        }, Math.random() * 3000); // Délai aléatoire entre 0 et 3 secondes
+    });
+}
+
+// Fonction asynchrone pour attendre l'appel API
+async function awaitCall() {
+    try {
+        console.log("En attente de l'appel...");
+        // Attendre la réponse de l'API
+        const responseData = await callAPI();
+        // Enregistrer les données
+        console.log("Données reçues :", responseData);
+        // Faire quelque chose avec les données reçues, par exemple :
+        // updateUI(responseData);
+    } catch (error) {
+        console.error("Erreur lors de l'appel API :", error);
+    }
+}
+
+// Appel de la fonction asynchrone
+awaitCall();
+
+// Tache 03
+
+async function awaitCall() {
+    try {
+        const result = await callAPI();
+        return result;
+    } catch (error) {
+        // En cas d'erreur lors de l'appel de l'API, enregistrez un message d'erreur convivial
+        console.error("Une erreur s'est produite lors de l'appel de l'API :", error.message);
+        throw new Error("Erreur lors de l'appel de l'API. Veuillez réessayer plus tard.");
+    }
+}
+
+async function callAPI() {
+    // Simulation d'un appel à une API qui pourrait échouer
+    return new Promise((resolve, reject) => {
+        // Simulons une erreur pour illustrer le cas où l'appel échoue
+        setTimeout(() => {
+            reject(new Error("Erreur de connexion à l'API"));
+        }, 2000); // Délai de 2 secondes pour simuler un appel à une API
+    });
+}
+
+// Utilisation de la fonction awaitCall
+async function fetchData() {
+    try {
+        const data = await awaitCall();
+        console.log("Données récupérées avec succès :", data);
+    } catch (error) {
+        console.error("Une erreur s'est produite lors de la récupération des données :", error.message);
+    }
+}
+
+// Appel de la fonction fetchData
+fetchData();
+
+async function chainedAsyncFunctions() {
+    try {
+        // Appel de la première fonction asynchrone
+        await firstAsyncFunction();
+        console.log("Première fonction terminée");
+
+        // Appel de la deuxième fonction asynchrone
+        await secondAsyncFunction();
+        console.log("Deuxième fonction terminée");
+
+        // Appel de la troisième fonction asynchrone
+        await thirdAsyncFunction();
+        console.log("Troisième fonction terminée");
+    } catch (error) {
+        console.error("Une erreur s'est produite :", error);
+    }
+}
+
+// Première fonction asynchrone
+async function firstAsyncFunction() {
+    await delay(1000); // Délai d'une seconde
+    console.log("Première fonction terminée d'exécution");
+}
+
+// Deuxième fonction asynchrone
+async function secondAsyncFunction() {
+    await delay(1000); // Délai d'une seconde
+    console.log("Deuxième fonction terminée d'exécution");
+}
+
+// Troisième fonction asynchrone
+async function thirdAsyncFunction() {
+    await delay(1000); // Délai d'une seconde
+    console.log("Troisième fonction terminée d'exécution");
+}
+
+// Fonction pour simuler un délai
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Appel de la fonction chainedAsyncFunctions
+chainedAsyncFunctions();
+//Tache 04
+async function concurrentRequests() {
+    try {
+        // Make two API requests concurrently using Promise.all()
+        const [result1, result2] = await Promise.all([callAPI1(), callAPI2()]);
+
+        // Log the combined results
+        console.log("Combined results:");
+        console.log("Result from API call 1:", result1);
+        console.log("Result from API call 2:", result2);
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+}
+
+// Simulated API call 1
+async function callAPI1() {
+    // Simulating API call delay
+    await delay(2000);
+    return "Result from API call 1";
+}
+
+// Simulated API call 2
+async function callAPI2() {
+    // Simulating API call delay
+    await delay(1500);
+    return "Result from API call 2";
+}
+
+// Function to simulate delay
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Call the concurrentRequests function
+concurrentRequests();
+
+// Tache 05
+async function parallelCalls(urls) {
+    try {
+        // Créer un tableau de promesses pour chaque appel API
+        const promises = urls.map(url => fetchData(url));
+
+        // Attendre que toutes les promesses soient résolues
+        const responses = await Promise.all(promises);
+
+        // Enregistrer les réponses une fois que toutes les demandes sont terminées
+        console.log("Réponses des appels parallèles:");
+        responses.forEach((response, index) => {
+            console.log(`Réponse ${index + 1}:`, response);
+        });
+    } catch (error) {
+        console.error("Une erreur s'est produite lors des appels parallèles :", error);
+    }
+}
+
+// Fonction pour récupérer les données d'une URL (simulée ici)
+async function fetchData(url) {
+    // Simuler un délai d'appel avec une URL fictive
+    await delay(Math.random() * 2000); // Délai aléatoire entre 0 et 2000 ms
+    return `Données de ${url}`;
+}
+
+// Fonction pour simuler un délai
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Tableau d'URL à appeler en parallèle
+const urls = ["https://example.com/api/data1", "https://example.com/api/data2", "https://example.com/api/data3"];
+
+// Appel de la fonction parallelCalls avec le tableau d'URL
+parallelCalls(urls);
+
